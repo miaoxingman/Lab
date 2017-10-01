@@ -1,4 +1,5 @@
 package com.miaoxingman.app;
+import org.apache.log4j.Logger;
 
 /**
  * Hello world!
@@ -6,8 +7,9 @@ package com.miaoxingman.app;
  */
 public class App 
 {
+    private static Logger log = Logger.getLogger(App.class);
     public static void main( String[] args )
     {
-        System.out.println( "Hello World!" );
+        log.debug("Hello World!");
     }
 }
