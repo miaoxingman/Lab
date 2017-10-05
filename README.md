@@ -35,7 +35,7 @@ https://www.mkyong.com/web-development/how-to-configure-proxy-settings-in-eclips
 * deployed applications are usually then located under the directory
 	* /usr/local/Cellar/tomcat/[version]/libexec/webapps/
 
-### 4. How to add apache-tomcat 7 into Eclipse 
+### 4. How to add apache-tomcat into Eclipse 
 
 * go to Help/Install new Software choose "All Available sites"
 and search for "server"
@@ -43,3 +43,7 @@ and search for "server"
 * You will see "Web, Xml, Java EE and OSGi Enterprise Development" Install this Software.
 * After a restart of Eclipse go to Window/Preferences/Server/Runtime Enviroments and click "add"
 * If installed using brew, set the tomcat installation path to /usr/local/Cellar/tomcat7/7.0.57/libexec/ 
+
+### 5. How to create a jersey project.
+* mvn archetype:generate -DgroupId= com.miaoxingman.jersey -DartifactId=JerseyExample -DarchetypeArtifactId=maven-archetype-webapp
+* http://www.codedata.com.tw/java/java-restful-1-jersey-and-jax-rs/
