@@ -60,4 +60,34 @@ public class TestApp
     public void dummyTest() {
         System.out.println("@Test - dummyTest");
     }
+
+    @Test(expectedExceptions = Exception.class)
+    public void exceptionTest() throws Exception {
+        System.out.println("@Test - exceptionTest");
+        throw new Exception();
+    }
+
+    @Test(enabled = true)
+    public void testEnabled() {
+        Assert.assertEquals(true, true);
+        System.out.println("@Test - testEnabled");
+    }
+
+    @Test(enabled = false)
+    public void testDisabled() {
+        Assert.assertEquals(true, true);
+        System.out.println("@Test - testDisabled");
+    }
+
+    @Test(timeOut = 5000) // time in mulliseconds
+    public void testThisShouldPass() throws InterruptedException {
+        System.out.println("@Test - testThisShouldPass");
+        Thread.sleep(4000);
+    }
+
+    @Test(timeOut = 1000)
+    public void testThisShouldFail() {
+        System.out.println("@Test - testThisShouldFail");
+        while (true);
+    }
 }
