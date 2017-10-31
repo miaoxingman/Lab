@@ -2,3 +2,4 @@
 .classpath
 .settings/
 target/
+webpack-test/node_modules
