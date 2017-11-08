@@ -1,23 +1,24 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="view-usb">
     <head>
         <title>USB Device Info</title>
         <link rel="stylesheet" href="style.css">
         <script src="libs/jquery-3.2.1.min.js"></script>
+        <script src="libs/angular.min.js"></script>
     </head>
-    <body>
+    <body data-ng-controller="DeviceListController" >
         <div class="left-panel">
-            <p> Devices: </p>
+            <p> {{ListName}} </p>
             <p> 
-                <select id="device-selector" size="20">
+                <select ng-model="selectedDevice" ng-options="usb.productName for usb in UsbDevices" size="20" style="width:200px;">
                 </select>
             </p>
             <p>
-                <button id="add-device">Add Device</button>
+                <button ng-click="FindDevice()">Add Device</button>
             </p>
         </div>
         <p id="device-info">
-            <em>No device selected.</em>
+            {{DeviceInfo()}}
         </p>
         <script src="script.js"></script>
     </body>

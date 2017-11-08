@@ -1,9 +1,119 @@
-var device_selector = $('#device-selector');
-var add_device = $('#add-device');
+//var device_selector = $('#device-selector');
+//var add_device = $('#add-device');
 var device_info = $('#device-info');
 
-var devices = {};
+var app = angular.module("view-usb", []);
 
+app.controller('DeviceListController', function($scope, $timeout) {
+  $scope.ListName = "Devices";
+  $scope.UsbDevices = [];
+  $scope.FindDevice = function() {
+    chrome.usb.getUserSelectedDevices({
+      'multiple': false
+    }, function(selected_devices) {
+      if (chrome.runtime.lastError != undefined) {
+        console.warn('chrome.usb.getUserSelectedDevices error: ' +
+                     chrome.runtime.lastError.message);
+        return;
+      }
+      for (var device of selected_devices) {
+        if (device.device in $scope.UsbDevices) {
+          console.log("[in]device -> " + device.device + "desp" + device.productId.toString());
+        } else {
+          $scope.UsbDevices.push(device);
+          console.log("[new]device -> " + device.device + "desp" + device.productId.toString());
+        }
+      }
+      $timeout(function() {
+        $scope.selectedDevice = device;    
+      }, 0);
+    });
+
+    if (chrome.usb.onDeviceRemoved) {
+      chrome.usb.onDeviceRemoved.addListener(function (device) {
+        for (var i = 0; i < $scope.UsbDevices.length; ++i) {
+          if ($scope.UsbDevices[i].device == device.device) {
+            delete $scope.UsbDevices[i];
+            $timeout(function() {
+              $scope.selectedDevice = null;    
+            }, 0);
+            break;
+          }
+        }
+      });
+    }
+  },
+  $scope.DeviceInfo = function() {
+    device_info[0].innerHTML = "";
+    console.log($scope.selectedDevice);
+    if( $scope.selectedDevice == undefined ||
+        $scope.selectedDevice == null) {
+      var el = document.createElement('em');
+      el.textContent = "No device selected.";
+      device_info[0].appendChild(el);
+      return;
+    } 
+    appendDeviceInfo(
+        'Product ID',
+        '0x' + ('0000' + $scope.selectedDevice.productId.toString(16)).slice(-4));
+    appendDeviceInfo(
+        'Vendor ID',
+        '0x' + ('0000' + $scope.selectedDevice.vendorId.toString(16)).slice(-4));
+
+    chrome.usb.openDevice($scope.selectedDevice, function(handle) {
+      if (chrome.runtime.lastError != undefined) {
+        var el = document.createElement('em');
+        el.textContent = 'Failed to open device: ' +
+            chrome.runtime.lastError.message;
+        device_info[0].appendChild(el);
+      } else {
+        populateDeviceInfo(handle, function () {
+          chrome.usb.closeDevice(handle);
+        });
+      }
+    });
+  }
+});
+
+/*
+app.service('USBArbitrator', function() {
+  var UsbDevices = [];
+  var devices = {};
+  chrome.usb.getDevices({}, function(found_devices) {
+    if (chrome.runtime.lastError != undefined) {
+      console.warn('chrome.usb.getDevices error: ' +
+                   chrome.runtime.lastError.message);
+      return;
+    }
+
+    for (var device of found_devices) {
+      devices[device.device] = device;
+      //appendToDeviceSelector(device);
+    }
+  });
+
+  if (chrome.usb.onDeviceAdded) {
+    chrome.usb.onDeviceAdded.addListener(function (device) {
+      devices[device.device] = device;
+      //appendToDeviceSelector(device);
+    });
+  }
+
+  if (chrome.usb.onDeviceRemoved) {
+    chrome.usb.onDeviceRemoved.addListener(function (device) {
+      delete devices[device.device];
+      for (var i = 0; i < UsbDevices.length; ++i) {
+        if (UsbDevices[i].device == device.device) {
+          UsbDevices.remove(i);
+          break;
+        }
+      }
+    });
+  }
+});
+*/
+
+/*
 function appendToDeviceSelector(device) {
   const productInfo = 'Product 0x' + ('0000' + device.productId.toString(16)).slice(-4) +
     ' Vendor 0x' + ('0000' + device.vendorId.toString(16)).slice(-4);
@@ -11,6 +121,7 @@ function appendToDeviceSelector(device) {
     .attr("value",device.device)
     .text(productInfo));
 };
+*/
 
 function appendDeviceInfo(name, value) {
   var el = document.createElement('b');
@@ -57,7 +168,7 @@ function populateDeviceInfo(handle, callback) {
     callback();
   });
 }
-
+/*
 function deviceSelectionChanged() {
   device_info[0].innerHTML = "";
 
@@ -90,7 +201,9 @@ function deviceSelectionChanged() {
     });
   }
 }
+*/
 
+/*
 chrome.usb.getDevices({}, function(found_devices) {
   if (chrome.runtime.lastError != undefined) {
     console.warn('chrome.usb.getDevices error: ' +
@@ -100,30 +213,31 @@ chrome.usb.getDevices({}, function(found_devices) {
 
   for (var device of found_devices) {
     devices[device.device] = device;
-    appendToDeviceSelector(device);
+    //appendToDeviceSelector(device);
   }
 });
 
 if (chrome.usb.onDeviceAdded) {
   chrome.usb.onDeviceAdded.addListener(function (device) {
     devices[device.device] = device;
-    appendToDeviceSelector(device);
+    //appendToDeviceSelector(device);
   });
 }
 
 if (chrome.usb.onDeviceRemoved) {
   chrome.usb.onDeviceRemoved.addListener(function (device) {
     delete devices[device.device];
-    for (var i = 0; i < device_selector[0].length; ++i) {
-      if (device_selector[0].options.item(i).value == device.device) {
-        device_selector[0].remove(i);
-        deviceSelectionChanged();
+    for (var i = 0; i < $scope.UsbDevices.length; ++i) {
+      if ($scope.UsbDevices[i].device == device.device) {
+        $scope.UsbDevices.remove(i);
         break;
       }
     }
   });
 }
+*/
 
+/*
 add_device.click(function() {
   chrome.usb.getUserSelectedDevices({
     'multiple': false
@@ -154,3 +268,4 @@ add_device.click(function() {
 });
 
 device_selector.change(deviceSelectionChanged);
+*/
