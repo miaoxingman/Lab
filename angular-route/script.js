@@ -1,6 +1,6 @@
 
 var myApp = angular.module('myApp', ['ngRoute', 'ngAnimate']);
-console.log("test")
+
 myApp.config(function($routeProvider) {
     $routeProvider
     .when('/', {
@@ -16,20 +16,34 @@ myApp.config(function($routeProvider) {
         controller  : "contactController"
     });
 });
-console.log("done")
+
 myApp.controller("mainController", ['$scope', function($scope) {
     $scope.pageClass = "page-home";
 }]);
-console.log("done1")
+
 myApp.controller('aboutController', function($scope) {
     $scope.pageClass = "page-about";
 });
 
-console.log("done2")
 myApp.controller('contactController', function($scope) {
     $scope.pageClass = "page-contact";
 });
-console.log("done3")
+
+myApp.run(['$rootScope', '$location', function($rootScope, $location) {
+    $rootScope.$on('$locationChangeStart', function locationChangeStart(event) {
+        console.log(event.name);
+    });
+    $rootScope.$on('$locationChangeSuccess', function locationChangeSuccess(event) {
+        console.log(event.name);
+    });
+    $rootScope.$on('$routeChangeStart', function routeChangeStart(event) {
+        console.log(event.name);
+    });
+    $rootScope.$on('$routeChangeSuccess', function routeChangeSuccess(event) {
+        console.log(event.name);
+    });
+
+}]);
 
 
 
