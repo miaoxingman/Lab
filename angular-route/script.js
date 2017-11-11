@@ -4,15 +4,15 @@ console.log("test")
 myApp.config(function($routeProvider) {
     $routeProvider
     .when('/', {
-        templateUrl : "/template/page-home.html",
+        templateUrl : "template/page-home.html",
         controller  : "mainController"
     })
     .when('/about', {
-        templateUrl : '/template/page-about.html',
+        templateUrl : 'template/page-about.html',
         controller  : 'aboutController'
     })
     .when('/contact', {
-        templateUrl : "/template/page-contact.html",
+        templateUrl : "template/page-contact.html",
         controller  : "contactController"
     });
 });
