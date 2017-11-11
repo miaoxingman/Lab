@@ -25,8 +25,12 @@ myApp.controller('aboutController', function($scope) {
     $scope.pageClass = "page-about";
 });
 
-myApp.controller('contactController', function($scope) {
+myApp.controller('contactController', function($scope, $window, $rootScope) {
     $scope.pageClass = "page-contact";
+     $rootScope.$on('$locationChangeStart', function locationChangeStart(event) {
+        console.log(event.name);
+        var ret = $window.confirm('Are you sure to give it up? ');
+    });   
 });
 
 myApp.run(['$rootScope', '$location', function($rootScope, $location) {
