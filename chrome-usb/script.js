@@ -31,7 +31,7 @@ app.controller('DeviceListController', function($scope, $timeout) {
       chrome.usb.onDeviceRemoved.addListener(function (device) {
         for (var i = 0; i < $scope.UsbDevices.length; ++i) {
           if ($scope.UsbDevices[i].device == device.device) {
-            delete $scope.UsbDevices[i];
+            $scope.UsbDevices.splice(i, 1);
             $timeout(function() {
               $scope.selectedDevice = null;    
             }, 0);
